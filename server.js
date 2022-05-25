@@ -4,6 +4,9 @@ const express = require("express");
 // Dotenv
 const dotenv = require("dotenv");
 
+// Error handler middleware
+const errorHandler = require("./middleware/error");
+
 // Colors
 const colors = require("colors");
 
@@ -18,6 +21,9 @@ connectDB();
 // App
 const app = express();
 
+// Body parse
+app.use(express.json());
+
 // Routes
 const bootcamp = require("./routes/bootcamps");
 
@@ -31,6 +37,9 @@ if (process.env.NODE_ENV === "development") {
 
 // Mount bootcamp router to a specific url(path)
 app.use("/api/v1/bootcamps", bootcamp);
+
+// Use the error handler middleware
+app.use(errorHandler);
 
 // Port
 const PORT = process.env.PORT || 3000;
