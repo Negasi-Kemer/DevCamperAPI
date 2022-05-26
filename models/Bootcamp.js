@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 // Slugify
 const slugify = require("slugify");
 
+// Geocoder
+const geocoder = require("../utils/geocoder");
+
 // Create the schema
 const BootcampSchema = new mongoose.Schema({
   name: {
@@ -50,13 +53,13 @@ const BootcampSchema = new mongoose.Schema({
       type: [Number],
       index: "2dsphere",
     },
+    formattedAddress: String,
+    street: String,
+    city: String,
+    state: String,
+    zipcode: String,
+    country: String,
   },
-  formattedAddress: String,
-  street: String,
-  city: String,
-  state: String,
-  zipcode: String,
-  country: String,
   careers: {
     // Array of strings
     type: [String],
@@ -105,6 +108,25 @@ const BootcampSchema = new mongoose.Schema({
 // Create bootcamp from the name
 BootcampSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+// Geocode and create location
+BootcampSchema.pre("save", async function (next) {
+  const loc = await geocoder.geocode(this.address);
+  this.location = {
+    type: "Pont",
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+    street: loc[0].streetName,
+    city: loc[0].city,
+    state: loc[0].stateCode,
+    zipcode: loc[0].zipcode,
+    country: loc[0].countryCode,
+  };
+
+  // Donot save address field in DB
+  this.address = undefined;
   next();
 });
 // Export the model
