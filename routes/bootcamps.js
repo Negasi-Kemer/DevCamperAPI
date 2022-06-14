@@ -11,7 +11,7 @@ const {
   getBootcampsInRadius,
 } = require("../controllers/bootcamp");
 
-// Include other rousrce routers
+// Include other resrce routers
 const courseRouter = require("./courses");
 
 // Router

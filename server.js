@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === "development") {
 
 // Mount bootcamp router to a specific url(path)
 app.use("/api/v1/bootcamps", bootcamp);
-app.use("/app/v1/courses", course);
+app.use("/api/v1/courses", course);
 
 // Use the error handler middleware
 app.use(errorHandler);
