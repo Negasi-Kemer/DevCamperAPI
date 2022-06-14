@@ -26,6 +26,7 @@ app.use(express.json());
 
 // Routes
 const bootcamp = require("./routes/bootcamps");
+const course = require("./routes/courses");
 
 // Morgan
 const morgan = require("morgan");
@@ -37,6 +38,7 @@ if (process.env.NODE_ENV === "development") {
 
 // Mount bootcamp router to a specific url(path)
 app.use("/api/v1/bootcamps", bootcamp);
+app.use("/api/v1/courses", course);
 
 // Use the error handler middleware
 app.use(errorHandler);
