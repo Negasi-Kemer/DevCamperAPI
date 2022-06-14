@@ -16,6 +16,10 @@ const router = express.Router();
 // Bootcamp controller
 const bootcampController = require("../controllers/bootcamp");
 
+router
+  .route("/radius/:zipcode/:distance")
+  .get(bootcampController.getBootcampsInRadius);
+
 // Group routes
 router.route("/").get(getBootcamps).post(createBootcamp);
 
