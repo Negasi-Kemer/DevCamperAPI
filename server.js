@@ -56,7 +56,7 @@ app.use("/api/v1/courses", course);
 app.use(errorHandler);
 
 // Port
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Listen
 const server = app.listen(
