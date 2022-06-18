@@ -13,6 +13,12 @@ const colors = require("colors");
 // DB connection
 const connectDB = require("./config/db");
 
+// File upload
+const fileupload = require("express-fileupload");
+
+// Path
+const path = require("path");
+
 // Load config variables
 dotenv.config({ path: "./config/config.env" });
 
@@ -36,6 +42,12 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+// Use fileupload
+app.use(fileupload());
+
+// Set static folder
+app.use(express.static(path.join(__dirname, "public")));
+
 // Mount bootcamp router to a specific url(path)
 app.use("/api/v1/bootcamps", bootcamp);
 app.use("/api/v1/courses", course);
@@ -44,7 +56,7 @@ app.use("/api/v1/courses", course);
 app.use(errorHandler);
 
 // Port
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Listen
 const server = app.listen(
