@@ -33,6 +33,7 @@ app.use(express.json());
 // Routes
 const bootcamp = require("./routes/bootcamps");
 const course = require("./routes/courses");
+const auth = require("./routes/auth");
 
 // Morgan
 const morgan = require("morgan");
@@ -51,6 +52,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Mount bootcamp router to a specific url(path)
 app.use("/api/v1/bootcamps", bootcamp);
 app.use("/api/v1/courses", course);
+app.use("/api/v1/auth", auth);
 
 // Use the error handler middleware
 app.use(errorHandler);
