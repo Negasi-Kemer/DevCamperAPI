@@ -52,5 +52,11 @@ UserSchema.methods.getSignedJwtToken = function () {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
+
+// Match password the user entered with the one in DB
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
 // Export
 module.exports = mongoose.model("User", UserSchema);
