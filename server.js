@@ -16,6 +16,9 @@ const connectDB = require("./config/db");
 // File upload
 const fileupload = require("express-fileupload");
 
+// Cookie parser
+const cookieParser = require("cookie-parser");
+
 // Path
 const path = require("path");
 
@@ -29,6 +32,9 @@ const app = express();
 
 // Body parse
 app.use(express.json());
+
+// Cookie parser
+app.use(cookieParser());
 
 // Routes
 const bootcamp = require("./routes/bootcamps");
