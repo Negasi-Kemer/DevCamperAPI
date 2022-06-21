@@ -26,14 +26,6 @@ exports.getCourses = asyncHandler(async (req, res, next) => {
   } else {
     res.status(200).json(res.advancedResults);
   }
-
-  const courses = await query;
-
-  res.status(200).json({
-    success: true,
-    count: courses.length,
-    data: courses,
-  });
 });
 
 // @desc Get single course
@@ -62,7 +54,11 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 // @route POST /api/v1/bootcamps/:bootcampId/courses
 // @access Public
 exports.createCourse = asyncHandler(async (req, res, next) => {
+  // Add bootcamp id to body
   req.body.bootcamp = req.params.bootcampId;
+
+  // Add user to body
+  req.body.user = req.user.id;
 
   const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
@@ -72,6 +68,16 @@ exports.createCourse = asyncHandler(async (req, res, next) => {
       new ErrorResponse(
         `No bootcamp found with the id ${req.params.bootcampId}`,
         404
+      )
+    );
+  }
+
+  // Check if user is bootcamp owner
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(
+        `You're not auhorized to add course on this bootcamp`,
+        401
       )
     );
   }
@@ -97,6 +103,13 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
     );
   }
 
+  // Check if user is course owner
+  if (course.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(`You're not auhorized to update this course`, 401)
+    );
+  }
+
   course = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -118,6 +131,13 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
   if (!course) {
     return next(
       new ErrorResponse(`No course found with the id ${req.params.id}`, 404)
+    );
+  }
+
+  // Check if user is course owner
+  if (course.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(`You're not auhorized to delete this course`, 401)
     );
   }
 
