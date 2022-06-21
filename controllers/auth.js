@@ -1,4 +1,4 @@
-// Bootcamp model
+// User model
 const User = require("../models/User");
 
 // Error response
