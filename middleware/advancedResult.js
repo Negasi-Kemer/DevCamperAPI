@@ -42,7 +42,7 @@ const advancedResults = (model, populate) => async (req, res, next) => {
   // Page number
   const page = parseInt(req.query.page, 10) || 1;
   // Limit per page
-  const limit = parseInt(req.query.limit, 10) || 2;
+  const limit = parseInt(req.query.limit, 10) || 25;
   // Start index on each page
   const startIndex = (page - 1) * limit;
   // End index on each page
