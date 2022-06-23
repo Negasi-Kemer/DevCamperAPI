@@ -11,7 +11,7 @@ const errorHandler = (err, req, res, next) => {
 
   // Mogoose bad object Id
   if (err.name === "CastError") {
-    const message = `Resource not found with id of ${err.value}`;
+    const message = `Resource not found`;
     error = new ErrorResponse(message, 404);
   }
 
@@ -25,6 +25,12 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === "ValidationError") {
     const message = Object.values(err.errors).map((val) => val.message);
     error = new ErrorResponse(message, 400);
+  }
+
+  // Invalid token error
+  if (err.name === "TokenExpiredError") {
+    const message = "Token is invalid or has expired";
+    error = new ErrorResponse(message, 401);
   }
 
   res.status(error.statusCode || 500).json({

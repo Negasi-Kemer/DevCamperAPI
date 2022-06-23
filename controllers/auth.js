@@ -45,7 +45,6 @@ exports.login = asyncHandler(async (req, res, next) => {
   if (!email || !password) {
     return next(new ErrorResponse("Email and passwor are required", 400));
   }
-  console.log("Password: ", password);
 
   // Find user by email and then set 'password' column selectable
   const user = await User.findOne({ email }).select("+password");
@@ -80,7 +79,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   // Create password reset token
   const resetToken = await user.getPasswordResetToken();
-  console.log(resetToken);
+
   // Save user
   await user.save({ validateBeforeSave: false });
 
@@ -149,9 +148,26 @@ exports.resetpassword = asyncHandler(async (req, res, next) => {
 // @access Private
 exports.getMe = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user._id);
+
   res.status(200).json({
     success: true,
     data: user,
+  });
+});
+
+// @desc Logout a user
+// @route GET /api/v1/auth/logout
+// @access Private
+exports.logout = asyncHandler(async (req, res, next) => {
+  // Cookie token expires in 1 second
+  res.cookie("token", "none", {
+    expires: new Date(Date.now() + 1 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    data: {},
   });
 });
 
@@ -212,6 +228,7 @@ const sendTokenResponse = (user, statusCode, res) => {
 
   res.status(statusCode).cookie("token", token, options).json({
     success: true,
+    data: user,
     token,
   });
 };
