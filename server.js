@@ -19,6 +19,24 @@ const fileupload = require("express-fileupload");
 // Cookie parser
 const cookieParser = require("cookie-parser");
 
+// Mongo santize
+const mongoSanitize = require("express-mongo-sanitize");
+
+// Helmet
+const helmet = require("helmet");
+
+// XSS-Clean
+const xss = require("xss-clean");
+
+// Rate limit
+const rateLimit = require("express-rate-limit");
+
+// HTTP Parameter Polution
+const hpp = require("hpp");
+
+// CORS
+const cors = require("cors");
+
 // Path
 const path = require("path");
 
@@ -53,6 +71,28 @@ if (process.env.NODE_ENV === "development") {
 
 // Use fileupload
 app.use(fileupload());
+
+// Mongo santize
+app.use(mongoSanitize());
+
+// Set security header
+app.use(helmet());
+
+// Prevent XSS attack
+app.use(xss());
+
+// Rate limiter - DOS attack protector
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 10000, // 10 minutes
+  max: 100,
+});
+app.use(limiter);
+
+// Http parameter polution (hpp)
+app.use(hpp());
+
+// Enable CORS
+app.use(cors());
 
 // Set static folder
 app.use(express.static(path.join(__dirname, "public")));
