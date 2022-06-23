@@ -27,6 +27,12 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse(message, 400);
   }
 
+  // Invalid token error
+  if (err.name === "TokenExpiredError") {
+    const message = "Token is invalid or has expired";
+    error = new ErrorResponse(message, 401);
+  }
+
   res.status(error.statusCode || 500).json({
     success: false,
     error: error.message || "Server Error",
