@@ -7,3 +7,11 @@ class ErrorResponse extends Error {
 
 // Export
 module.exports = ErrorResponse;
+
+// const ErrorResponse = function (message, statusCode) {
+//   let ErrorObj = new Error(message);
+//   this.message = message;
+//   this.statusCode = statusCode;
+// };
+
+// module.exports = ErrorResponse;
